@@ -8,6 +8,7 @@ export var mediaData = [
     subtitle: "By Blender Foundation",
     thumb: "images/BigBuckBunny.jpg",
     title: "Big Buck Bunny",
+    duration: "9:56",
   },
   {
     description: "The first Blender Open Movie from 2006",
@@ -17,6 +18,7 @@ export var mediaData = [
     subtitle: "By Blender Foundation",
     thumb: "images/ElephantsDream.jpg",
     title: "Elephant Dream",
+    duration: "10:53",
   },
   {
     description:
@@ -27,6 +29,7 @@ export var mediaData = [
     subtitle: "By Google",
     thumb: "images/ForBiggerBlazes.jpg",
     title: "For Bigger Blazes",
+    duration: "0:15",
   },
   {
     description:
@@ -37,6 +40,7 @@ export var mediaData = [
     subtitle: "By Google",
     thumb: "images/ForBiggerEscapes.jpg",
     title: "For Bigger Escape",
+    duration: "0:15",
   },
   {
     description:
@@ -47,6 +51,7 @@ export var mediaData = [
     subtitle: "By Google",
     thumb: "images/ForBiggerFun.jpg",
     title: "For Bigger Fun",
+    duration: "1:00",
   },
   {
     description:
@@ -57,6 +62,7 @@ export var mediaData = [
     subtitle: "By Google",
     thumb: "images/ForBiggerJoyrides.jpg",
     title: "For Bigger Joyrides",
+    duration: "0:15",
   },
   {
     description:
@@ -67,6 +73,7 @@ export var mediaData = [
     subtitle: "By Google",
     thumb: "images/ForBiggerMeltdowns.jpg",
     title: "For Bigger Meltdowns",
+    duration: "0:15",
   },
   {
     description:
@@ -77,6 +84,7 @@ export var mediaData = [
     subtitle: "By Blender Foundation",
     thumb: "images/Sintel.jpg",
     title: "Sintel",
+    duration: "14:47",
   },
   {
     description:
@@ -87,6 +95,7 @@ export var mediaData = [
     subtitle: "By Garage419",
     thumb: "images/SubaruOutbackOnStreetAndDirt.jpg",
     title: "Subaru Outback On Street And Dirt",
+    duration: "9:54",
   },
   {
     description:
@@ -97,6 +106,7 @@ export var mediaData = [
     subtitle: "By Blender Foundation",
     thumb: "images/TearsOfSteel.jpg",
     title: "Tears of Steel",
+    duration: "12:14",
   },
   {
     description:
@@ -107,6 +117,7 @@ export var mediaData = [
     subtitle: "By Garage419",
     thumb: "images/VolkswagenGTIReview.jpg",
     title: "Volkswagen GTI Review",
+    duration: "9:53",
   },
   {
     description:
@@ -117,6 +128,7 @@ export var mediaData = [
     subtitle: "By Garage419",
     thumb: "images/WeAreGoingOnBullrun.jpg",
     title: "We Are Going On Bullrun",
+    duration: "0:47",
   },
   {
     description:
@@ -127,5 +139,6 @@ export var mediaData = [
     subtitle: "By Garage419",
     thumb: "images/WhatCarCanYouGetForAGrand.jpg",
     title: "What care can you get for a grand?",
+    duration: "9:27",
   },
 ];
