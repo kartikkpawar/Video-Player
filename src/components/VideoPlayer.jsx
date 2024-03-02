@@ -256,7 +256,7 @@ const VideoPlayer = () => {
       className="relative aspect-video"
       onMouseEnter={() => setHoverFocus(true)}
       onMouseLeave={mouseLeaveHelper}
-      // onClick={playerClickHelper}
+      onClick={playerClickHelper}
       ref={playerContainerRef}
     >
       <video
@@ -291,7 +291,7 @@ const VideoPlayer = () => {
             onClick={seekComplete}
           >
             <div
-              className="h-full rounded-full bg-red-500 transition-all"
+              className="h-full rounded-full bg-red-500 transition-all duration-0"
               ref={seekBarRef}
             />
           </div>
