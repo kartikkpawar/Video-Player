@@ -13,12 +13,23 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 
+const speedOptions = {
+  0.5: "0.5",
+  0.75: "0.75",
+  1: "Normal",
+  1.25: "1.25",
+  1.5: "1.5",
+  1.75: "1.75",
+  2: "2",
+};
+
 const VideoPlayer = () => {
   const { activeVideo } = usePlayerContext();
   const [hoverFocus, setHoverFocus] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [playerMode, setPlayerMode] = useState("DEFAULT");
   const [showSpeedOptions, setShowSpeedOptions] = useState(false);
+  const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const videoRef = useRef(null);
 
   useEffect(() => {
@@ -39,11 +50,29 @@ const VideoPlayer = () => {
     setPlayerMode(mode);
   };
 
+  const manageSpeedControls = (e) => {
+    e.stopPropagation();
+    setShowSpeedOptions(!showSpeedOptions);
+  };
+
+  const setSpeed = (speed) => {
+    setPlaybackSpeed(speed);
+    setShowSpeedOptions(false);
+  };
+
+  const playerClickHelper = () => {
+    setShowSpeedOptions(false);
+  };
+
   return (
     <div
       className="aspect-video relative"
       onMouseEnter={() => setHoverFocus(true)}
-      onMouseLeave={() => setHoverFocus(false)}
+      onMouseLeave={() => {
+        setHoverFocus(false);
+        setShowSpeedOptions(false);
+      }}
+      onClick={playerClickHelper}
     >
       <video
         className="w-full h-full rounded-lg"
@@ -54,7 +83,7 @@ const VideoPlayer = () => {
       <div
         className={clsx(
           "flex flex-col absolute bottom-2 w-full text-white px-2 transition-all ease-in-out duration-150",
-          { "opacity-100": hoverFocus, "opacity-100": !hoverFocus }
+          { "opacity-100": hoverFocus, "opacity-0": !hoverFocus }
         )}
       >
         <div className="w-full">
@@ -67,8 +96,30 @@ const VideoPlayer = () => {
           </div>
         </div>
         <div className="my-2 px-3 flex">
-          <div className="text-white flex gap-5 flex-1 items-center justify-start">
-            <Gauge className="cursor-pointer" />
+          <div className="text-white flex gap-5 flex-1 items-center justify-start relative">
+            <div
+              className={clsx(
+                "flex flex-col bg-black/70 absolute -top-60 -left-2 p-3 rounded-lg text-lg text-center gap-1 w-32 transition-all select-none z-10",
+                {
+                  "opacity-100": showSpeedOptions,
+                  "opacity-0": !showSpeedOptions,
+                }
+              )}
+            >
+              {Object.entries(speedOptions)
+                .sort(([aKey], [bKey]) => aKey - bKey)
+                .map(([key, value]) => (
+                  <span
+                    className={clsx("hover:font-bold cursor-pointer", {
+                      "font-bold": playbackSpeed.toString() === key,
+                    })}
+                    onClick={() => setSpeed(key)}
+                  >
+                    {value}
+                  </span>
+                ))}
+            </div>
+            <Gauge className="cursor-pointer" onClick={manageSpeedControls} />
           </div>
           <div className="text-white flex gap-5 flex-1 items-center justify-center">
             <SkipBack size={30} className="cursor-pointer" />
