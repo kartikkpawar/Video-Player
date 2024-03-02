@@ -56,6 +56,7 @@ const VideoPlayer = () => {
   };
 
   const setSpeed = (speed) => {
+    videoRef.current.playbackRate = parseFloat(speed);
     setPlaybackSpeed(speed);
     setShowSpeedOptions(false);
   };
@@ -107,13 +108,14 @@ const VideoPlayer = () => {
               )}
             >
               {Object.entries(speedOptions)
-                .sort(([aKey], [bKey]) => aKey - bKey)
+                .sort(([aKey], [bKey]) => parseFloat(aKey) - parseFloat(bKey))
                 .map(([key, value]) => (
                   <span
                     className={clsx("hover:font-bold cursor-pointer", {
                       "font-bold": playbackSpeed.toString() === key,
                     })}
                     onClick={() => setSpeed(key)}
+                    key={key}
                   >
                     {value}
                   </span>
