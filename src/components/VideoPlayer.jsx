@@ -36,6 +36,7 @@ const VideoPlayer = () => {
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoCompleted, setIsVideoCompleted] = useState(false);
+  const [isSeeking, setIsSeeking] = useState(false);
 
   const videoRef = useRef(null);
   const playerContainerRef = useRef(null);
@@ -228,15 +229,23 @@ const VideoPlayer = () => {
     setIsVideoCompleted(false);
   };
 
-  const seekBarClick = (e) => {
+  const seekBarHelper = (e) => {
     e.stopPropagation();
+    if (!isSeeking) return;
+    const distanceToFill =
+      e.clientX - seekBarContainerRef.current.getBoundingClientRect().x;
+    seekBarRef.current.style.width = `${distanceToFill}px`;
+  };
+
+  const seekComplete = (e) => {
+    e.stopPropagation();
+
     const distanceToFill =
       e.clientX - seekBarContainerRef.current.getBoundingClientRect().x;
     seekBarRef.current.style.width = `${distanceToFill}px`;
 
     const seekBarContainerWidth = seekBarContainerRef.current.offsetWidth;
     const percentCovered = (distanceToFill * 100) / seekBarContainerWidth;
-
     const percentageToVideoTime =
       (percentCovered / 100) * videoRef.current.duration;
     videoRef.current.currentTime = percentageToVideoTime;
@@ -247,7 +256,7 @@ const VideoPlayer = () => {
       className="relative aspect-video"
       onMouseEnter={() => setHoverFocus(true)}
       onMouseLeave={mouseLeaveHelper}
-      onClick={playerClickHelper}
+      // onClick={playerClickHelper}
       ref={playerContainerRef}
     >
       <video
@@ -266,14 +275,23 @@ const VideoPlayer = () => {
           }
         )}
       >
-        <div className="w-full">
+        <div
+          className="w-full"
+          ref={seekBarContainerRef}
+          onMouseDown={() => {
+            setIsSeeking(true);
+          }}
+          onMouseUp={(e) => {
+            setIsSeeking(false);
+          }}
+          onMouseMove={seekBarHelper}
+        >
           <div
-            className="w-full h-1 hover:h-2 transition-all bg-gray-300/70 rounded-full cursor-pointer"
-            onClick={seekBarClick}
-            ref={seekBarContainerRef}
+            className="w-full h-[5px] hover:h-[10px] transition-all bg-gray-300/70 rounded-full cursor-pointer"
+            onClick={seekComplete}
           >
             <div
-              className="h-full rounded-full bg-red-500 transition-all duration-75"
+              className="h-full rounded-full bg-red-500 transition-all"
               ref={seekBarRef}
             />
           </div>
