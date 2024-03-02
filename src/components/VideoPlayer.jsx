@@ -1,16 +1,16 @@
 import React from "react";
-
-const temp_sources = [
-  "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
-];
+import { usePlayerContext } from "../app/PlayerContext";
 
 const VideoPlayer = () => {
+  const { activeVideo } = usePlayerContext();
+
   return (
-    <video className="w-full aspect-video" autoPlay muted>
-      {temp_sources.map((source) => (
-        <source src={source} type="video/mp4" />
-      ))}
-    </video>
+    <video
+      className="w-full aspect-video rounded-lg"
+      muted
+      autoPlay
+      src={activeVideo.sources[0]}
+    />
   );
 };
 

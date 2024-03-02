@@ -1,15 +1,19 @@
 import React, { createContext, useContext, useState } from "react";
+import { mediaData } from "../lib/data";
 
-const PlayerContext = createContext({
-  activeVideo: null,
-});
+const PlayerContext = createContext();
 
 const PlayerProvider = ({ children }) => {
-  const [activeVideo, setActiveVideo] = useState(null);
-  const selectVideo = () => {};
+  const [activeVideo, setActiveVideo] = useState(mediaData[0]);
+  const [videosData, setVideosData] = useState(mediaData);
+
+  const selectVideo = (data) => {
+    if (data.id === activeVideo.id) return;
+    setActiveVideo(data);
+  };
 
   return (
-    <PlayerContext.Provider value={{ activeVideo, selectVideo }}>
+    <PlayerContext.Provider value={{ activeVideo, selectVideo, videosData }}>
       {children}
     </PlayerContext.Provider>
   );
