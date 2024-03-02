@@ -10,6 +10,8 @@ import {
   RectangleHorizontal,
   SkipBack,
   SkipForward,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 import clsx from "clsx";
 
@@ -30,14 +32,109 @@ const VideoPlayer = () => {
   const [playerMode, setPlayerMode] = useState("DEFAULT");
   const [showSpeedOptions, setShowSpeedOptions] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
+  const [isMuted, setIsMuted] = useState(false);
+
   const videoRef = useRef(null);
+  const playerContainerRef = useRef(null);
+  const timerRef = useRef(null);
+
+  const roundOffTime = new Intl.NumberFormat(undefined, {
+    minimumIntegerDigits: 2,
+  });
+
+  const formatTime = (time) => {
+    if (!time) return "0:00";
+    const seconds = Math.floor(time % 60);
+    const minutes = Math.floor(time / 60) % 60;
+    return `${minutes}:${roundOffTime.format(seconds)}`;
+  };
 
   useEffect(() => {
-    if (!videoRef.current) return;
+    const videoPlayer = videoRef.current;
+    if (!videoPlayer) return;
+
+    const handleFullScreenChange = (e) => {
+      if (!document.fullscreenElement) {
+        setPlayerMode("DEFAULT");
+      }
+    };
+
+    const handleKeyPress = (e) => {
+      // Spacebar click
+      if (e.keyCode === 32) {
+        videoPlayPause();
+        return;
+      }
+
+      // Video Seeking
+      if (e.key === "ArrowRight") {
+        videoPlayer.currentTime += 10;
+        return;
+      }
+
+      if (e.key === "ArrowLeft") {
+        videoPlayer.currentTime -= 10;
+        return;
+      }
+
+      // Fullscreen
+      if (e.key === "f") {
+        playerContainerRef.current.requestFullscreen();
+        return;
+      }
+
+      // Audio Controls
+      if (e.key === "ArrowUp" && videoPlayer.volume < 1) {
+        if (isMuted) setIsMuted(false);
+        if (videoPlayer.volume > 0.95) {
+          videoPlayer.volume = 1;
+          return;
+        }
+        videoPlayer.volume += 0.05;
+        if (videoPlayer.volume === 0) setIsMuted(true);
+        else setIsMuted(false);
+      }
+      if (e.key === "ArrowDown" && videoPlayer.volume > 0) {
+        if (videoPlayer.volume < 0.05) {
+          videoPlayer.volume = 0;
+          setIsMuted(true);
+          return;
+        }
+        videoPlayer.volume -= 0.05;
+      }
+      if (e.key === "m") {
+        videoPlayer.volume = 0;
+        setIsMuted(true);
+        return;
+      }
+      if (e.key === "u") {
+        videoPlayer.volume = 1;
+        setIsMuted(false);
+      }
+    };
+
+    const videoTimeUpdateHelper = (e) => {
+      timerRef.current.innerHTML = formatTime(videoPlayer.currentTime);
+    };
+
+    document.addEventListener("fullscreenchange", handleFullScreenChange);
+    document.addEventListener("keydown", handleKeyPress);
+    videoPlayer.addEventListener("timeupdate", videoTimeUpdateHelper);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullScreenChange);
+      document.removeEventListener("keydown", handleKeyPress);
+      videoPlayer.removeEventListener("timeupdate", videoTimeUpdateHelper);
+      videoPlayer.removeEventListener("loadeddata", videoTimeUpdateHelper);
+    };
   }, []);
 
-  const videoPlayPause = () => {
-    if (isPlaying) {
+  const videoPlayPause = (e) => {
+    if (e) {
+      e.stopPropagation();
+    }
+
+    if (!videoRef.current.paused) {
       videoRef.current.pause();
       setIsPlaying(false);
       return;
@@ -46,8 +143,16 @@ const VideoPlayer = () => {
     setIsPlaying(true);
   };
 
-  const switchMode = (mode) => {
+  const switchMode = (e, mode) => {
+    e.stopPropagation();
     setPlayerMode(mode);
+    if (mode === "FULLSCREEN") {
+      playerContainerRef.current.requestFullscreen();
+    }
+    if (mode === "DEFAULT" && document.fullscreenElement) {
+      document.exitFullscreen();
+      setPlayerMode("DEFAULT");
+    }
   };
 
   const manageSpeedControls = (e) => {
@@ -55,7 +160,8 @@ const VideoPlayer = () => {
     setShowSpeedOptions(!showSpeedOptions);
   };
 
-  const setSpeed = (speed) => {
+  const setSpeed = (e, speed) => {
+    e.stopPropagation();
     videoRef.current.playbackRate = parseFloat(speed);
     setPlaybackSpeed(speed);
     setShowSpeedOptions(false);
@@ -63,28 +169,43 @@ const VideoPlayer = () => {
 
   const playerClickHelper = () => {
     setShowSpeedOptions(false);
+    videoPlayPause();
+  };
+
+  const mouseLeaveHelper = () => {
+    if (playerMode === "FULLSCREEN") return;
+    setHoverFocus(false);
+    setShowSpeedOptions(false);
+  };
+
+  const muteUnmuteVideo = (e) => {
+    e.stopPropagation();
+    videoRef.current.muted = !isMuted;
+    setIsMuted(!isMuted);
   };
 
   return (
     <div
-      className="aspect-video relative"
+      className="relative aspect-video"
       onMouseEnter={() => setHoverFocus(true)}
-      onMouseLeave={() => {
-        setHoverFocus(false);
-        setShowSpeedOptions(false);
-      }}
+      onMouseLeave={mouseLeaveHelper}
       onClick={playerClickHelper}
+      ref={playerContainerRef}
     >
       <video
-        className="w-full h-full rounded-lg"
-        muted
+        className="w-full h-full rounded-lg z-0"
+        controls={false}
+        controlsList=""
         src={activeVideo.sources[0]}
         ref={videoRef}
       />
       <div
         className={clsx(
-          "flex flex-col absolute bottom-2 w-full text-white px-2 transition-all ease-in-out duration-150",
-          { "opacity-100": hoverFocus, "opacity-0": !hoverFocus }
+          "flex flex-col absolute bottom-2 w-full text-white px-2 transition-all ease-in-out duration-150 z-10",
+          {
+            "opacity-100": hoverFocus || playerMode === "FULLSCREEN",
+            "opacity-0": !hoverFocus,
+          }
         )}
       >
         <div className="w-full">
@@ -92,29 +213,30 @@ const VideoPlayer = () => {
             <div className="w-full h-full rounded-full bg-red-500" />
           </div>
           <div className="flex justify-between mt-1 px-2 select-none hover:select-auto">
-            <span>0:10</span>
+            <span ref={timerRef}> 0:00</span>
             <span>{activeVideo.duration}</span>
           </div>
         </div>
-        <div className="my-2 px-3 flex">
+        <div className="my-2 px-3 flex ">
           <div className="text-white flex gap-5 flex-1 items-center justify-start relative">
             <div
               className={clsx(
-                "flex flex-col bg-black/70 absolute -top-60 -left-2 p-3 rounded-lg text-lg text-center gap-1 w-32 transition-all select-none z-10",
+                "flex flex-col bg-black/70 absolute -top-60 -left-2 p-3 rounded-lg text-lg text-center gap-1 w-32 transition-all select-none",
                 {
                   "opacity-100": showSpeedOptions,
                   "opacity-0": !showSpeedOptions,
                 }
               )}
+              onMouseLeave={() => setShowSpeedOptions(false)}
             >
               {Object.entries(speedOptions)
                 .sort(([aKey], [bKey]) => parseFloat(aKey) - parseFloat(bKey))
                 .map(([key, value]) => (
                   <span
-                    className={clsx("hover:font-bold cursor-pointer", {
+                    className={clsx("hover:font-semibold cursor-pointer", {
                       "font-bold": playbackSpeed.toString() === key,
                     })}
-                    onClick={() => setSpeed(key)}
+                    onClick={(e) => setSpeed(e, key)}
                     key={key}
                   >
                     {value}
@@ -122,6 +244,11 @@ const VideoPlayer = () => {
                 ))}
             </div>
             <Gauge className="cursor-pointer" onClick={manageSpeedControls} />
+            {isMuted ? (
+              <VolumeX className="cursor-pointer" onClick={muteUnmuteVideo} />
+            ) : (
+              <Volume2 className="cursor-pointer" onClick={muteUnmuteVideo} />
+            )}
           </div>
           <div className="text-white flex gap-5 flex-1 items-center justify-center">
             <SkipBack size={30} className="cursor-pointer" />
@@ -144,24 +271,24 @@ const VideoPlayer = () => {
             {playerMode === "DEFAULT" && (
               <RectangleHorizontal
                 className="cursor-pointer"
-                onClick={() => switchMode("THEATER")}
+                onClick={(e) => switchMode(e, "THEATER")}
               />
             )}
             {playerMode === "THEATER" && (
               <Fullscreen
                 className="cursor-pointer"
-                onClick={() => switchMode("DEFAULT")}
+                onClick={(e) => switchMode(e, "DEFAULT")}
               />
             )}
             {playerMode === "FULLSCREEN" ? (
               <Minimize
                 className="cursor-pointer"
-                onClick={() => switchMode("DEFAULT")}
+                onClick={(e) => switchMode(e, "DEFAULT")}
               />
             ) : (
               <Maximize
                 className="cursor-pointer"
-                onClick={() => switchMode("FULLSCREEN")}
+                onClick={(e) => switchMode(e, "FULLSCREEN")}
               />
             )}
           </div>
