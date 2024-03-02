@@ -134,7 +134,7 @@ const VideoPlayer = () => {
 
       const percentageCompleted =
         (videoPlayer.currentTime * 100) / videoPlayer.duration;
-      seekBarRef.current.style.width = `${Math.floor(percentageCompleted)}%`;
+      seekBarRef.current.style.width = `${percentageCompleted}%`;
 
       if (percentageCompleted === 100) setIsVideoCompleted(true);
     };
@@ -149,6 +149,14 @@ const VideoPlayer = () => {
       videoPlayer.removeEventListener("timeupdate", videoTimeUpdateHelper);
     };
   }, []);
+
+  useEffect(() => {
+    if (isVideoCompleted) {
+      setIsVideoCompleted(false);
+      setIsPlaying(false);
+    }
+    seekBarRef.current.style.width = "0px";
+  }, [activeVideo]);
 
   const videoPlayPause = (e) => {
     if (e) {
@@ -228,7 +236,7 @@ const VideoPlayer = () => {
       ref={playerContainerRef}
     >
       <video
-        className="w-full h-full rounded-lg z-0"
+        className="w-full h-full rounded-lg"
         controls={false}
         controlsList=""
         src={activeVideo.sources[0]}
@@ -236,7 +244,7 @@ const VideoPlayer = () => {
       />
       <div
         className={clsx(
-          "flex flex-col absolute bottom-2 w-full text-white px-2 transition-all ease-in-out duration-150 z-10",
+          "flex flex-col absolute bottom-0 w-full text-white px-2 transition-all ease-in-out duration-150 z-10 h-1/6 justify-end bg-gradient-to-t from-black/70 to-transparent rounded-b-lg pb-3",
           {
             "opacity-100": hoverFocus || playerMode === "FULLSCREEN",
             "opacity-0": !hoverFocus,
@@ -244,13 +252,13 @@ const VideoPlayer = () => {
         )}
       >
         <div className="w-full">
-          <div className="w-full h-1 hover:h-2 transition-all">
+          <div className="w-full h-1 hover:h-2 transition-all bg-gray-300/70 rounded-full">
             <div
-              className="h-full rounded-full bg-red-500 transition-all duration-100"
+              className="h-full rounded-full bg-red-500 transition-all duration-75"
               ref={seekBarRef}
             />
           </div>
-          <div className="flex justify-between mt-1 px-2 select-none hover:select-auto">
+          <div className="flex justify-between mt-1 px-2 select-none hover:select-auto font-semibold">
             <span ref={timerRef}> 0:00</span>
             <span>{activeVideo.duration}</span>
           </div>
