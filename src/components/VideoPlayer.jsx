@@ -26,7 +26,8 @@ const speedOptions = {
 };
 
 const VideoPlayer = () => {
-  const { activeVideo } = usePlayerContext();
+  const { activeVideo, nextVideo, previousVideo } = usePlayerContext();
+
   const [hoverFocus, setHoverFocus] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [playerMode, setPlayerMode] = useState("DEFAULT");
@@ -113,7 +114,7 @@ const VideoPlayer = () => {
       }
     };
 
-    const videoTimeUpdateHelper = (e) => {
+    const videoTimeUpdateHelper = () => {
       timerRef.current.innerHTML = formatTime(videoPlayer.currentTime);
     };
 
@@ -184,6 +185,15 @@ const VideoPlayer = () => {
     setIsMuted(!isMuted);
   };
 
+  const nextVideoHelper = (e) => {
+    e.stopPropagation();
+    nextVideo();
+  };
+  const previousVideoHelper = (e) => {
+    e.stopPropagation();
+    previousVideo();
+  };
+
   return (
     <div
       className="relative aspect-video"
@@ -251,7 +261,11 @@ const VideoPlayer = () => {
             )}
           </div>
           <div className="text-white flex gap-5 flex-1 items-center justify-center">
-            <SkipBack size={30} className="cursor-pointer" />
+            <SkipBack
+              size={30}
+              className="cursor-pointer"
+              onClick={previousVideoHelper}
+            />
             {isPlaying ? (
               <Pause
                 size={30}
@@ -265,7 +279,11 @@ const VideoPlayer = () => {
                 onClick={videoPlayPause}
               />
             )}
-            <SkipForward size={30} className="cursor-pointer" />
+            <SkipForward
+              size={30}
+              className="cursor-pointer"
+              onClick={nextVideoHelper}
+            />
           </div>
           <div className="text-white flex gap-5 flex-1 items-center justify-end">
             {playerMode === "DEFAULT" && (

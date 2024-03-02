@@ -1,19 +1,41 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { mediaData } from "../lib/data";
 
 const PlayerContext = createContext();
 
 const PlayerProvider = ({ children }) => {
-  const [activeVideo, setActiveVideo] = useState(mediaData[0]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeVideo, setActiveVideo] = useState(mediaData[activeIndex]);
   const [videosData, setVideosData] = useState(mediaData);
+
+  useEffect(() => {
+    setActiveVideo(videosData[activeIndex]);
+  }, [activeIndex]);
 
   const selectVideo = (data) => {
     if (data.id === activeVideo.id) return;
     setActiveVideo(data);
   };
 
+  const nextVideo = () => {
+    if (activeIndex === videosData.length - 1) {
+      setActiveIndex(0);
+    } else {
+      setActiveIndex((prev) => prev + 1);
+    }
+  };
+  const previousVideo = () => {
+    if (activeIndex === 0) {
+      setActiveIndex(videosData.length - 1);
+    } else {
+      setActiveIndex((prev) => prev - 1);
+    }
+  };
+  console.log(activeIndex);
   return (
-    <PlayerContext.Provider value={{ activeVideo, selectVideo, videosData }}>
+    <PlayerContext.Provider
+      value={{ activeVideo, selectVideo, videosData, nextVideo, previousVideo }}
+    >
       {children}
     </PlayerContext.Provider>
   );
