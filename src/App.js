@@ -12,10 +12,10 @@ const App = () => {
         <div className="flex-[0.7] flex flex-col gap-2 rounded-lg">
           <VideoPlayer />
           <div className="flex flex-col gap-1 p-2">
-            <span className="text-2xl line-clamp-2 font-bold">
+            <span className="text-2xl line-clamp-2 font-bold select-none hover:select-auto">
               {activeVideo?.title}
             </span>
-            <span className="line-clamp-5 leading-5 font-normal text-base">
+            <span className="line-clamp-5 leading-5 font-normal text-base select-none hover:select-auto">
               {activeVideo?.description}
             </span>
           </div>
