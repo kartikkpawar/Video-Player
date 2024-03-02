@@ -8,6 +8,7 @@ import {
   Pause,
   Play,
   RectangleHorizontal,
+  RotateCcw,
   SkipBack,
   SkipForward,
   Volume2,
@@ -34,10 +35,12 @@ const VideoPlayer = () => {
   const [showSpeedOptions, setShowSpeedOptions] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
+  const [isVideoCompleted, setIsVideoCompleted] = useState(false);
 
   const videoRef = useRef(null);
   const playerContainerRef = useRef(null);
   const timerRef = useRef(null);
+  const seekBarRef = useRef(null);
 
   const roundOffTime = new Intl.NumberFormat(undefined, {
     minimumIntegerDigits: 2,
@@ -128,6 +131,12 @@ const VideoPlayer = () => {
 
     const videoTimeUpdateHelper = () => {
       timerRef.current.innerHTML = formatTime(videoPlayer.currentTime);
+
+      const percentageCompleted =
+        (videoPlayer.currentTime * 100) / videoPlayer.duration;
+      seekBarRef.current.style.width = `${Math.floor(percentageCompleted)}%`;
+
+      if (percentageCompleted === 100) setIsVideoCompleted(true);
     };
 
     document.addEventListener("fullscreenchange", handleFullScreenChange);
@@ -138,7 +147,6 @@ const VideoPlayer = () => {
       document.removeEventListener("fullscreenchange", handleFullScreenChange);
       document.removeEventListener("keydown", handleKeyPress);
       videoPlayer.removeEventListener("timeupdate", videoTimeUpdateHelper);
-      videoPlayer.removeEventListener("loadeddata", videoTimeUpdateHelper);
     };
   }, []);
 
@@ -206,6 +214,11 @@ const VideoPlayer = () => {
     previousVideo();
   };
 
+  const replayVideo = () => {
+    videoRef.current.currentTime = 0;
+    setIsVideoCompleted(false);
+  };
+
   return (
     <div
       className="relative aspect-video"
@@ -232,7 +245,10 @@ const VideoPlayer = () => {
       >
         <div className="w-full">
           <div className="w-full h-1 hover:h-2 transition-all">
-            <div className="w-full h-full rounded-full bg-red-500" />
+            <div
+              className="h-full rounded-full bg-red-500 transition-all duration-100"
+              ref={seekBarRef}
+            />
           </div>
           <div className="flex justify-between mt-1 px-2 select-none hover:select-auto">
             <span ref={timerRef}> 0:00</span>
@@ -278,7 +294,13 @@ const VideoPlayer = () => {
               className="cursor-pointer"
               onClick={previousVideoHelper}
             />
-            {isPlaying ? (
+            {isVideoCompleted ? (
+              <RotateCcw
+                size={30}
+                className="cursor-pointer"
+                onClick={() => replayVideo()}
+              />
+            ) : isPlaying ? (
               <Pause
                 size={30}
                 className="cursor-pointer"
@@ -291,6 +313,7 @@ const VideoPlayer = () => {
                 onClick={videoPlayPause}
               />
             )}
+
             <SkipForward
               size={30}
               className="cursor-pointer"
