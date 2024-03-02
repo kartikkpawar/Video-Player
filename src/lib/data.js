@@ -9,6 +9,7 @@ export var mediaData = [
     thumb: "images/BigBuckBunny.jpg",
     title: "Big Buck Bunny",
     duration: "9:56",
+    id: 1,
   },
   {
     description: "The first Blender Open Movie from 2006",
@@ -19,6 +20,7 @@ export var mediaData = [
     thumb: "images/ElephantsDream.jpg",
     title: "Elephant Dream",
     duration: "10:53",
+    id: 2,
   },
   {
     description:
@@ -30,6 +32,7 @@ export var mediaData = [
     thumb: "images/ForBiggerBlazes.jpg",
     title: "For Bigger Blazes",
     duration: "0:15",
+    id: 3,
   },
   {
     description:
@@ -41,6 +44,7 @@ export var mediaData = [
     thumb: "images/ForBiggerEscapes.jpg",
     title: "For Bigger Escape",
     duration: "0:15",
+    id: 4,
   },
   {
     description:
@@ -52,6 +56,7 @@ export var mediaData = [
     thumb: "images/ForBiggerFun.jpg",
     title: "For Bigger Fun",
     duration: "1:00",
+    id: 5,
   },
   {
     description:
@@ -63,6 +68,7 @@ export var mediaData = [
     thumb: "images/ForBiggerJoyrides.jpg",
     title: "For Bigger Joyrides",
     duration: "0:15",
+    id: 6,
   },
   {
     description:
@@ -74,6 +80,7 @@ export var mediaData = [
     thumb: "images/ForBiggerMeltdowns.jpg",
     title: "For Bigger Meltdowns",
     duration: "0:15",
+    id: 7,
   },
   {
     description:
@@ -85,6 +92,7 @@ export var mediaData = [
     thumb: "images/Sintel.jpg",
     title: "Sintel",
     duration: "14:47",
+    id: 8,
   },
   {
     description:
@@ -96,6 +104,7 @@ export var mediaData = [
     thumb: "images/SubaruOutbackOnStreetAndDirt.jpg",
     title: "Subaru Outback On Street And Dirt",
     duration: "9:54",
+    id: 9,
   },
   {
     description:
@@ -107,6 +116,7 @@ export var mediaData = [
     thumb: "images/TearsOfSteel.jpg",
     title: "Tears of Steel",
     duration: "12:14",
+    id: 10,
   },
   {
     description:
@@ -118,6 +128,7 @@ export var mediaData = [
     thumb: "images/VolkswagenGTIReview.jpg",
     title: "Volkswagen GTI Review",
     duration: "9:53",
+    id: 11,
   },
   {
     description:
@@ -129,6 +140,7 @@ export var mediaData = [
     thumb: "images/WeAreGoingOnBullrun.jpg",
     title: "We Are Going On Bullrun",
     duration: "0:47",
+    id: 12,
   },
   {
     description:
@@ -140,5 +152,6 @@ export var mediaData = [
     thumb: "images/WhatCarCanYouGetForAGrand.jpg",
     title: "What care can you get for a grand?",
     duration: "9:27",
+    id: 13,
   },
 ];
