@@ -112,6 +112,18 @@ const VideoPlayer = () => {
         videoPlayer.volume = 1;
         setIsMuted(false);
       }
+
+      // Playback speed
+      if (e.key === ">") {
+        if (videoPlayer.playbackRate >= 2) return;
+        videoPlayer.playbackRate += 0.25;
+        setPlaybackSpeed(videoPlayer.playbackRate);
+      }
+      if (e.key === "<") {
+        if (videoPlayer.playbackRate <= 0.25) return;
+        videoPlayer.playbackRate -= 0.25;
+        setPlaybackSpeed(videoPlayer.playbackRate);
+      }
     };
 
     const videoTimeUpdateHelper = () => {
