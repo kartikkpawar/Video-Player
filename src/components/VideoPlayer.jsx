@@ -41,6 +41,7 @@ const VideoPlayer = () => {
   const playerContainerRef = useRef(null);
   const timerRef = useRef(null);
   const seekBarRef = useRef(null);
+  const seekBarContainerRef = useRef(null);
 
   const roundOffTime = new Intl.NumberFormat(undefined, {
     minimumIntegerDigits: 2,
@@ -132,11 +133,11 @@ const VideoPlayer = () => {
     const videoTimeUpdateHelper = () => {
       timerRef.current.innerHTML = formatTime(videoPlayer.currentTime);
 
-      const percentageCompleted =
+      const percentCompleted =
         (videoPlayer.currentTime * 100) / videoPlayer.duration;
-      seekBarRef.current.style.width = `${percentageCompleted}%`;
+      seekBarRef.current.style.width = `${percentCompleted}%`;
 
-      if (percentageCompleted === 100) setIsVideoCompleted(true);
+      if (percentCompleted === 100) setIsVideoCompleted(true);
     };
 
     document.addEventListener("fullscreenchange", handleFullScreenChange);
@@ -227,6 +228,20 @@ const VideoPlayer = () => {
     setIsVideoCompleted(false);
   };
 
+  const seekBarClick = (e) => {
+    e.stopPropagation();
+    const distanceToFill =
+      e.clientX - seekBarContainerRef.current.getBoundingClientRect().x;
+    seekBarRef.current.style.width = `${distanceToFill}px`;
+
+    const seekBarContainerWidth = seekBarContainerRef.current.offsetWidth;
+    const percentCovered = (distanceToFill * 100) / seekBarContainerWidth;
+
+    const percentageToVideoTime =
+      (percentCovered / 100) * videoRef.current.duration;
+    videoRef.current.currentTime = percentageToVideoTime;
+  };
+
   return (
     <div
       className="relative aspect-video"
@@ -252,7 +267,11 @@ const VideoPlayer = () => {
         )}
       >
         <div className="w-full">
-          <div className="w-full h-1 hover:h-2 transition-all bg-gray-300/70 rounded-full">
+          <div
+            className="w-full h-1 hover:h-2 transition-all bg-gray-300/70 rounded-full cursor-pointer"
+            onClick={seekBarClick}
+            ref={seekBarContainerRef}
+          >
             <div
               className="h-full rounded-full bg-red-500 transition-all duration-75"
               ref={seekBarRef}
