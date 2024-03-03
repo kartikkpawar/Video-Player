@@ -13,6 +13,7 @@ const VideoTile = ({ data }) => {
           src={`https://storage.googleapis.com/gtv-videos-bucket/sample/${data.thumb}`}
           alt="Video thumbnail"
           className="object-cover h-full w-full rounded-lg"
+          loading="lazy"
         />
         <span className="absolute bottom-1 right-2 bg-black text-white p-1 text-xs rounded-md">
           {data.duration}
