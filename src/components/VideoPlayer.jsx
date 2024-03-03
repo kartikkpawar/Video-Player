@@ -34,7 +34,8 @@ const speedOptions = {
 };
 
 const VideoPlayer = () => {
-  const { activeVideo, nextVideo, previousVideo } = usePlayerContext();
+  const { activeVideo, nextVideo, previousVideo, updateVideoDuration } =
+    usePlayerContext();
   const { isMobileView } = useWindowResize();
 
   const [hoverFocus, setHoverFocus] = useState(false);
@@ -162,6 +163,8 @@ const VideoPlayer = () => {
 
     const videoTimeUpdateHelper = () => {
       timerRef.current.innerHTML = formatTime(videoPlayer.currentTime);
+      console.log("duration changed");
+      updateVideoDuration(videoPlayer.currentTime);
 
       const percentCompleted =
         (videoPlayer.currentTime * 100) / videoPlayer.duration;

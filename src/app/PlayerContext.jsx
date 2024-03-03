@@ -8,6 +8,7 @@ const PlayerProvider = ({ children }) => {
   const [activeVideo, setActiveVideo] = useState(mediaData[activeIndex]);
   const [videosData, setVideosData] = useState(mediaData);
   const [searchedVideos, setSearchedVideos] = useState([]);
+  const [videoDuration, setVideoDuration] = useState("");
 
   useEffect(() => {
     setActiveVideo(videosData[activeIndex]);
@@ -44,6 +45,11 @@ const PlayerProvider = ({ children }) => {
     );
     setSearchedVideos(filteredData);
   };
+
+  const updateVideoDuration = (duration) => {
+    setVideoDuration(duration);
+  };
+
   return (
     <PlayerContext.Provider
       value={{
@@ -55,6 +61,8 @@ const PlayerProvider = ({ children }) => {
         updateSearch,
         searchedVideos,
         setVideosData,
+        updateVideoDuration,
+        videoDuration,
       }}
     >
       {children}
