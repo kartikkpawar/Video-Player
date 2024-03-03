@@ -70,6 +70,7 @@ const VideoPlayer = () => {
     };
 
     const handleKeyPress = (e) => {
+      if (e.target.tagName === "INPUT") return; // Blocking the event from searchbar
       // Spacebar click
       if (e.keyCode === 32) {
         videoPlayPause();
@@ -317,7 +318,7 @@ const VideoPlayer = () => {
           "flex flex-col absolute bottom-0 w-full text-white px-2 transition-all ease-in-out duration-150 z-10 h-1/6 justify-end bg-gradient-to-t from-black/70 to-transparent rounded-b-lg pb-3",
           {
             "opacity-100": hoverFocus && isMouseMoving,
-            "opacity-0": !hoverFocus || !isMouseMoving,
+            "opacity-100": !hoverFocus || !isMouseMoving,
           }
         )}
       >

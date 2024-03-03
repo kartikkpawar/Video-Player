@@ -7,6 +7,7 @@ const PlayerProvider = ({ children }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [activeVideo, setActiveVideo] = useState(mediaData[activeIndex]);
   const [videosData, setVideosData] = useState(mediaData);
+  const [searchedVideos, setSearchedVideos] = useState([]);
 
   useEffect(() => {
     setActiveVideo(videosData[activeIndex]);
@@ -31,10 +32,25 @@ const PlayerProvider = ({ children }) => {
       setActiveIndex((prev) => prev - 1);
     }
   };
-  console.log(activeIndex);
+  const updateSearch = (searchParams) => {
+    const filteredData = videosData.filter(
+      (video) =>
+        video.title.toLowerCase().includes(searchParams.toLowerCase()) ||
+        video.description.toLowerCase().includes(searchParams.toLowerCase())
+    );
+    setSearchedVideos(filteredData);
+  };
   return (
     <PlayerContext.Provider
-      value={{ activeVideo, selectVideo, videosData, nextVideo, previousVideo }}
+      value={{
+        activeVideo,
+        selectVideo,
+        videosData,
+        nextVideo,
+        previousVideo,
+        updateSearch,
+        searchedVideos,
+      }}
     >
       {children}
     </PlayerContext.Provider>

@@ -8,7 +8,7 @@ const VideoTile = ({ data }) => {
       className="w-full h-28 flex-shrink-0 flex cursor-pointer group hover:bg-slate-100 rounded-lg select-none hover:select-auto"
       onClick={() => selectVideo(data)}
     >
-      <div className="relative flex-[0.5] h-full w-full">
+      <div className="relative flex-[0.5] h-full w-full flex-shrink-0">
         <img
           src={`https://storage.googleapis.com/gtv-videos-bucket/sample/${data.thumb}`}
           alt="Video thumbnail"
