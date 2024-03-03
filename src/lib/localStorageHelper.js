@@ -13,7 +13,6 @@ export const saveVideoStatus = (completedDuration, activeVideo) => {
   );
 
   if (videoIndex === -1) {
-    console.log("new_video");
     localVideos.push(data);
     localStorage.setItem("vp-videos-data", JSON.stringify(localVideos));
     return;
@@ -31,4 +30,18 @@ export const getCurrentVideoStatus = (videoId) => {
   const isPresent = localVideos.filter((video) => video.id === videoId);
   if (isPresent.length === 0) return false;
   return isPresent[0];
+};
+
+export const setAutoPlayStatus = (autoplay) => {
+  localStorage.setItem("vp-videos-autoplay", JSON.stringify(autoplay));
+};
+export const getAutoPlayStatus = (autoplay) => {
+  let autoplayValue = localStorage.getItem("vp-videos-autoplay");
+  if (!autoplayValue) {
+    localStorage.setItem("vp-videos-autoplay", JSON.stringify(false));
+    return false;
+  }
+
+  autoplayValue = JSON.parse(autoplayValue);
+  return autoplayValue;
 };

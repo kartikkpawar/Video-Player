@@ -17,8 +17,10 @@ import {
 import clsx from "clsx";
 import useWindowResize from "../hooks/useWindowResize";
 import {
+  getAutoPlayStatus,
   getCurrentVideoStatus,
   saveVideoStatus,
+  setAutoPlayStatus,
 } from "../lib/localStorageHelper";
 
 const speedOptions = {
@@ -78,6 +80,9 @@ const VideoPlayer = () => {
         (videoPlayer.currentTime * 100) / videoPlayer.duration;
       seekBarRef.current.style.width = `${percentCompleted}%`;
     }
+
+    const autoplay = getAutoPlayStatus();
+    setIsAutoPlayEnabled(autoplay);
 
     const handleFullScreenChange = (e) => {
       if (!document.fullscreenElement) {
@@ -303,6 +308,7 @@ const VideoPlayer = () => {
 
   const toggleAutoplay = (e) => {
     e.stopPropagation();
+    setAutoPlayStatus(!isAutoPlayEnabled);
     setIsAutoPlayEnabled(!isAutoPlayEnabled);
   };
 
