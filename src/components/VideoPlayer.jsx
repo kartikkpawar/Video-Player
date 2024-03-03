@@ -74,13 +74,14 @@ const VideoPlayer = () => {
     if (!videoPlayer) return;
 
     const videoLocalData = getCurrentVideoStatus(activeVideo.id);
+    // Current video previous state
     if (videoLocalData) {
       videoPlayer.currentTime = videoLocalData.completedDuration;
       const percentCompleted =
         (videoPlayer.currentTime * 100) / videoPlayer.duration;
       seekBarRef.current.style.width = `${percentCompleted}%`;
     }
-
+    // Autoplay state
     const autoplay = getAutoPlayStatus();
     setIsAutoPlayEnabled(autoplay);
 
@@ -186,6 +187,7 @@ const VideoPlayer = () => {
     };
   }, []);
 
+  // For change in video
   useEffect(() => {
     const videoPlayer = videoRef.current;
     const videoLocalData = getCurrentVideoStatus(activeVideo.id);
@@ -201,8 +203,6 @@ const VideoPlayer = () => {
     setIsPlaying(false);
     seekBarRef.current.style.width = "0px";
   }, [activeVideo]);
-
-  // Mouse handling
 
   const videoPlayPause = (e) => {
     if (e) {
@@ -223,6 +223,7 @@ const VideoPlayer = () => {
       .catch((err) => console.log("Something went wrong", err));
   };
 
+  // Player mode
   const switchMode = (e, mode) => {
     e.stopPropagation();
     setPlayerMode(mode);
@@ -240,6 +241,7 @@ const VideoPlayer = () => {
     setShowSpeedOptions(!showSpeedOptions);
   };
 
+  // Control Video Speed
   const setSpeed = (e, speed) => {
     e.stopPropagation();
     videoRef.current.playbackRate = parseFloat(speed);
@@ -264,6 +266,7 @@ const VideoPlayer = () => {
     setIsMuted(!isMuted);
   };
 
+  // Video Traversing helper's
   const nextVideoHelper = (e) => {
     e.stopPropagation();
     saveVideoStatus(videoRef.current.currentTime, activeVideo);
@@ -280,6 +283,7 @@ const VideoPlayer = () => {
     setIsVideoCompleted(false);
   };
 
+  // Seekbar Helpers
   const seekBarHelper = (e) => {
     e.stopPropagation();
     if (!isSeeking) return;
@@ -312,6 +316,7 @@ const VideoPlayer = () => {
     setIsAutoPlayEnabled(!isAutoPlayEnabled);
   };
 
+  // Mouse handling
   const mouseMoveHandler = () => {
     if (!isPlaying) return setIsMouseMoving(true);
 
@@ -350,7 +355,7 @@ const VideoPlayer = () => {
           "flex flex-col absolute bottom-0 w-full text-white px-2 transition-all ease-in-out duration-150 z-10 h-1/6 justify-end bg-gradient-to-t from-black/70 to-transparent rounded-b-lg md:pb-3",
           {
             "opacity-100": hoverFocus && isMouseMoving,
-            "opacity-0": !hoverFocus || !isMouseMoving,
+            "opacity-100": !hoverFocus || !isMouseMoving,
           }
         )}
       >
