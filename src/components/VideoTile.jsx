@@ -42,7 +42,7 @@ const VideoTile = (props) => {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
-          className="w-full h-28 flex-shrink-0 flex cursor-pointer group hover:bg-slate-100 rounded-lg select-none bg-white items-center px-1"
+          className="w-full h-28 flex cursor-pointer group hover:bg-slate-100 rounded-lg select-none bg-white items-center px-1"
           onClick={() => selectVideo(data)}
         >
           {props?.isDND && <Menu size={10} className="mr-2" />}
@@ -57,8 +57,8 @@ const VideoTile = (props) => {
               {data.duration}
             </span>
           </div>
-          <div className="flex-[0.5] p-2 pt-1 h-full">
-            <span className="text-lg font-medium line-clamp-1">
+          <div className="flex-[0.5] p-2 pt-1 h-full overflow-clip">
+            <span className="text-lg font-medium line-clamp-1 ">
               {data.title}
             </span>
             <span className="line-clamp-3 leading-5 font-light">
