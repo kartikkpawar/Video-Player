@@ -236,6 +236,8 @@ const VideoPlayer = () => {
   const seekBarHelper = (e) => {
     e.stopPropagation();
     if (!isSeeking) return;
+    videoRef.current.pause();
+
     const distanceToFill =
       e.clientX - seekBarContainerRef.current.getBoundingClientRect().x;
     seekBarRef.current.style.width = `${distanceToFill}px`;
@@ -243,7 +245,6 @@ const VideoPlayer = () => {
 
   const seekComplete = (e) => {
     e.stopPropagation();
-
     const distanceToFill =
       e.clientX - seekBarContainerRef.current.getBoundingClientRect().x;
     seekBarRef.current.style.width = `${distanceToFill}px`;
@@ -253,6 +254,7 @@ const VideoPlayer = () => {
     const percentageToVideoTime =
       (percentCovered / 100) * videoRef.current.duration;
     videoRef.current.currentTime = percentageToVideoTime;
+    videoRef.current.play();
   };
 
   return (
