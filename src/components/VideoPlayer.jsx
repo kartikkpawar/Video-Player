@@ -40,6 +40,7 @@ const VideoPlayer = () => {
   const [isVideoCompleted, setIsVideoCompleted] = useState(false);
   const [isSeeking, setIsSeeking] = useState(false);
   const [isAutoPlayEnabled, setIsAutoPlayEnabled] = useState(false);
+  const [isMouseMoving, setIsMouseMoving] = useState(true);
 
   const videoRef = useRef(null);
   const playerContainerRef = useRef(null);
@@ -170,6 +171,27 @@ const VideoPlayer = () => {
     seekBarRef.current.style.width = "0px";
   }, [activeVideo]);
 
+  // Mouse handling
+  useEffect(() => {
+    const videoPlayer = videoRef.current;
+    if (!videoPlayer) return;
+    let timeout;
+    const hideMouse = () => {
+      setIsMouseMoving(false);
+    };
+
+    const handleMouseMove = () => {
+      setIsMouseMoving(true);
+      clearTimeout(timeout);
+      timeout = setTimeout(hideMouse, 3000);
+    };
+
+    videoPlayer.addEventListener("mousemove", handleMouseMove);
+    return () => {
+      videoPlayer.removeEventListener("mousemove", handleMouseMove);
+      clearTimeout(timeout);
+    };
+  }, []);
   const videoPlayPause = (e) => {
     if (e) {
       e.stopPropagation();
@@ -274,7 +296,9 @@ const VideoPlayer = () => {
 
   return (
     <div
-      className="relative aspect-video"
+      className={clsx("relative aspect-video", {
+        "cursor-none": !isMouseMoving,
+      })}
       onMouseEnter={() => setHoverFocus(true)}
       onMouseLeave={mouseLeaveHelper}
       onClick={playerClickHelper}
@@ -292,8 +316,8 @@ const VideoPlayer = () => {
         className={clsx(
           "flex flex-col absolute bottom-0 w-full text-white px-2 transition-all ease-in-out duration-150 z-10 h-1/6 justify-end bg-gradient-to-t from-black/70 to-transparent rounded-b-lg pb-3",
           {
-            "opacity-100": hoverFocus || playerMode === "FULLSCREEN",
-            "opacity-0": !hoverFocus,
+            "opacity-100": hoverFocus && isMouseMoving,
+            "opacity-0": !hoverFocus || !isMouseMoving,
           }
         )}
       >
