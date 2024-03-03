@@ -72,24 +72,20 @@ const VideoPlayer = () => {
       // Spacebar click
       if (e.keyCode === 32) {
         videoPlayPause();
-        return;
       }
 
       // Video Seeking
       if (e.key === "ArrowRight") {
         videoPlayer.currentTime += 10;
-        return;
       }
 
       if (e.key === "ArrowLeft") {
         videoPlayer.currentTime -= 10;
-        return;
       }
 
       // Fullscreen
       if (e.key === "f") {
         playerContainerRef.current.requestFullscreen();
-        return;
       }
 
       // Audio Controls
@@ -114,7 +110,6 @@ const VideoPlayer = () => {
       if (e.key === "m") {
         videoPlayer.volume = 0;
         setIsMuted(true);
-        return;
       }
       if (e.key === "u") {
         videoPlayer.volume = 1;
@@ -131,6 +126,13 @@ const VideoPlayer = () => {
         if (videoPlayer.playbackRate <= 0.25) return;
         videoPlayer.playbackRate -= 0.25;
         setPlaybackSpeed(videoPlayer.playbackRate);
+      }
+      // Video Skipping
+      if (e.key === "N") {
+        nextVideo();
+      }
+      if (e.key === "P") {
+        nextVideo();
       }
     };
 
