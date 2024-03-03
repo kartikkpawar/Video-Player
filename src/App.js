@@ -14,6 +14,7 @@ const App = () => {
     return () => {
       clearTimeout(searchTimeout);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSearch = (e) => {
