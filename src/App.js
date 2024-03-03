@@ -35,7 +35,7 @@ const App = () => {
         <div className="px-10 box-border flex justify-center items-center">
           <div
             className={clsx(
-              "p-2 px-5 border-2 flex gap-1 rounded-full justify-center items-center w-full md:w-1/5",
+              "p-2 px-5 border-2 flex gap-1 rounded-full justify-center items-center w-full md:w-1/4",
               {
                 "border-red-500":
                   searchInput.length && searchedVideos.length === 0,
