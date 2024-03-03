@@ -3,6 +3,7 @@ import { usePlayerContext } from "../app/PlayerContext";
 import { Draggable } from "react-beautiful-dnd";
 import { Menu } from "lucide-react";
 import { saveVideoStatus } from "../lib/localStorageHelper";
+import clsx from "clsx";
 
 const VideoTile = (props) => {
   const data = props.data;
@@ -18,7 +19,12 @@ const VideoTile = (props) => {
   if (!props.isDND) {
     return (
       <div
-        className="w-full h-28 flex-shrink-0 flex cursor-pointer group hover:bg-slate-100 rounded-lg select-none bg-white items-center px-1"
+        className={clsx(
+          "w-full h-28 flex cursor-pointer group hover:bg-slate-100 rounded-lg select-none bg-white items-center px-1 gap-2 md:gap-3",
+          {
+            "bg-slate-100": props.id === activeVideo.id,
+          }
+        )}
         onClick={selectVideoHelper}
       >
         {props?.isDND && <Menu size={10} className="mr-2" />}
@@ -50,7 +56,12 @@ const VideoTile = (props) => {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
-          className="w-full h-28 flex cursor-pointer group hover:bg-slate-100 rounded-lg select-none bg-white items-center px-1 gap-2 md:gap-3"
+          className={clsx(
+            "w-full h-28 flex cursor-pointer group hover:bg-slate-100 rounded-lg select-none bg-white items-center px-1 gap-2 md:gap-3",
+            {
+              "bg-slate-100": props.id === activeVideo.id,
+            }
+          )}
           onClick={selectVideoHelper}
         >
           {props?.isDND && <Menu size={10} className="mr-2" />}
