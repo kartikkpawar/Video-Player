@@ -4,7 +4,7 @@ import { usePlayerContext } from "../app/PlayerContext";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 const VideoList = () => {
-  const { videosData, setVideosData } = usePlayerContext();
+  const { videosData, setVideosData, searchedVideos } = usePlayerContext();
   const onDragEnd = (result) => {
     const { destination, source, draggableId } = result;
     console.log(draggableId);
@@ -14,6 +14,16 @@ const VideoList = () => {
     tempArr.splice(destination.index, 0, videosData[source.index]);
     setVideosData(tempArr);
   };
+
+  if (searchedVideos.length > 0) {
+    return (
+      <div className="h-full w-full p-4 flex gap-4 flex-col overflow-y-scroll">
+        {searchedVideos.map((video, index) => (
+          <VideoTile data={video} key={video.id} index={index} id={video.id} />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -30,7 +40,7 @@ const VideoList = () => {
                 key={video.id}
                 index={index}
                 id={video.id}
-                showDND
+                isDND
               />
             ))}
           </div>
