@@ -48,6 +48,7 @@ const VideoPlayer = () => {
   const [isSeeking, setIsSeeking] = useState(false);
   const [isAutoPlayEnabled, setIsAutoPlayEnabled] = useState(false);
   const [isMouseMoving, setIsMouseMoving] = useState(true);
+  const [message, setMessage] = useState();
 
   const videoRef = useRef(null);
   const playerContainerRef = useRef(null);
@@ -57,6 +58,8 @@ const VideoPlayer = () => {
   const playButtonRef = useRef(null);
 
   let timeout;
+
+  let messageTimeout;
 
   const roundOffTime = new Intl.NumberFormat(undefined, {
     minimumIntegerDigits: 2,
@@ -98,16 +101,19 @@ const VideoPlayer = () => {
       if (e.target.tagName === "INPUT") return; // Blocking the event from searchbar
       // Spacebar click
       if (e.keyCode === 32) {
+        e.preventDefault();
         videoPlayPause();
       }
 
       // Video Seeking
       if (e.key === "ArrowRight") {
         videoPlayer.currentTime += 10;
+        updateMessage("10 >>");
       }
 
       if (e.key === "ArrowLeft") {
         videoPlayer.currentTime -= 10;
+        updateMessage("<< 10");
       }
 
       // Fullscreen
@@ -121,28 +127,36 @@ const VideoPlayer = () => {
 
       // Audio Controls
       if (e.key === "ArrowUp" && videoPlayer.volume < 1) {
+        e.preventDefault();
         if (isMuted) setIsMuted(false);
         if (videoPlayer.volume > 0.95) {
           videoPlayer.volume = 1;
+          updateMessage(`${parseInt(videoPlayer.volume * 100).toFixed(0)}%`);
           return;
         }
         videoPlayer.volume += 0.05;
+        updateMessage(`${parseInt(videoPlayer.volume * 100).toFixed(0)}%`);
         if (videoPlayer.volume === 0) setIsMuted(true);
         else setIsMuted(false);
       }
       if (e.key === "ArrowDown" && videoPlayer.volume > 0) {
+        e.preventDefault();
         if (videoPlayer.volume < 0.05) {
           videoPlayer.volume = 0;
+          updateMessage(`${parseInt(videoPlayer.volume * 100).toFixed(0)}%`);
           setIsMuted(true);
           return;
         }
         videoPlayer.volume -= 0.05;
+        updateMessage(`${parseInt(videoPlayer.volume * 100).toFixed(0)}%`);
       }
       if (e.key === "m") {
         if (videoPlayer.muted) {
           videoPlayer.muted = false;
+          updateMessage("Unmute");
         } else {
           videoPlayer.muted = true;
+          updateMessage("Mute");
         }
 
         setIsMuted((prev) => !prev);
@@ -152,11 +166,13 @@ const VideoPlayer = () => {
       if (e.key === ">") {
         if (videoPlayer.playbackRate >= 2) return;
         videoPlayer.playbackRate += 0.25;
+        updateMessage(`x${videoPlayer.playbackRate}`);
         setPlaybackSpeed(videoPlayer.playbackRate);
       }
       if (e.key === "<") {
         if (videoPlayer.playbackRate <= 0.25) return;
         videoPlayer.playbackRate -= 0.25;
+        updateMessage(`x${videoPlayer.playbackRate}`);
         setPlaybackSpeed(videoPlayer.playbackRate);
       }
       // Video Skipping
@@ -191,6 +207,7 @@ const VideoPlayer = () => {
       document.removeEventListener("keydown", handleKeyPress);
       videoPlayer.removeEventListener("timeupdate", videoTimeUpdateHelper);
       clearTimeout(timeout);
+      clearTimeout(messageTimeout);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -321,6 +338,7 @@ const VideoPlayer = () => {
 
   const toggleAutoplay = (e) => {
     e.stopPropagation();
+    updateMessage(!isAutoPlayEnabled ? "Autoplay On" : "Autoplay Off");
     setAutoPlayStatus(!isAutoPlayEnabled);
     setIsAutoPlayEnabled(!isAutoPlayEnabled);
   };
@@ -338,6 +356,14 @@ const VideoPlayer = () => {
     setIsMouseMoving(true);
     clearTimeout(timeout);
     timeout = setTimeout(hideMouse, 3000);
+  };
+
+  const updateMessage = (message) => {
+    setMessage(message);
+    clearTimeout(messageTimeout);
+    messageTimeout = setTimeout(() => {
+      setMessage("");
+    }, 700);
   };
 
   return (
@@ -502,6 +528,19 @@ const VideoPlayer = () => {
           </div>
         </div>
       </div>
+      {!isMobileView && (
+        <div
+          className={clsx(
+            "h-max w-max bg-black/60 inset-0 absolute m-auto left-0 right-0 p-2 rounded-lg text-white text-xl transition-all duration-100 ease-in-out",
+            {
+              "opacity-100": message,
+              "opacity-0": !message,
+            }
+          )}
+        >
+          {message}
+        </div>
+      )}
     </div>
   );
 };
