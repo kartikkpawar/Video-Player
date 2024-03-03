@@ -7,11 +7,9 @@ import PlayerContext from "./app/PlayerContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <PlayerContext>
-      <App />
-    </PlayerContext>
-  </React.StrictMode>
+  <PlayerContext>
+    <App />
+  </PlayerContext>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -50,6 +50,7 @@ const PlayerProvider = ({ children }) => {
         previousVideo,
         updateSearch,
         searchedVideos,
+        setVideosData,
       }}
     >
       {children}

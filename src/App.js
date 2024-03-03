@@ -3,9 +3,10 @@ import VideoPlayer from "./components/VideoPlayer";
 import VideoList from "./components/VideoList";
 import { usePlayerContext } from "./app/PlayerContext";
 import { Search } from "lucide-react";
+import clsx from "clsx";
 
 const App = () => {
-  const { activeVideo, updateSearch } = usePlayerContext();
+  const { activeVideo, updateSearch, searchedVideos } = usePlayerContext();
   const [searchInput, setSearchInput] = useState("");
   let searchTimeout;
 
@@ -32,7 +33,15 @@ const App = () => {
     <div className="h-screen w-full box-border">
       <div className="flex flex-col max-w-[1750px] mx-auto h-full w-full pt-10">
         <div className="px-10 box-border flex justify-center items-center">
-          <div className="p-2 px-5 border-2 flex gap-1 rounded-full justify-center items-center w-1/5">
+          <div
+            className={clsx(
+              "p-2 px-5 border-2 flex gap-1 rounded-full justify-center items-center w-1/5",
+              {
+                "border-red-500":
+                  searchInput.length && searchedVideos.length === 0,
+              }
+            )}
+          >
             <input
               type="text"
               className="focus:outline-none w-full"
