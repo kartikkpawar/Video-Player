@@ -37,10 +37,7 @@ export const setAutoPlayStatus = (autoplay) => {
 };
 export const getAutoPlayStatus = (autoplay) => {
   let autoplayValue = localStorage.getItem("vp-videos-autoplay");
-  if (!autoplayValue) {
-    localStorage.setItem("vp-videos-autoplay", JSON.stringify(false));
-    return false;
-  }
+  if (!autoplayValue) return false;
 
   autoplayValue = JSON.parse(autoplayValue);
   return autoplayValue;
