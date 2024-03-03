@@ -1,4 +1,4 @@
-# Video player assignment
+# Video player
 
 **Live link:- [Click Here](https://kaleidoscopic-faun-0f2f0f.netlify.app/)**
 
