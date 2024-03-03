@@ -16,6 +16,7 @@
 - Playlist Search
 - Drag and Drop for re-ordering of the playlist
 - **All player related features are built in-house no 3rd party lib used**
+- Action Messages
 - And all other mentioned required features
 
 ## Keyboard Shorcuts
