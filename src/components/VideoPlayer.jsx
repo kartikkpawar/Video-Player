@@ -1,13 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { usePlayerContext } from "../app/PlayerContext";
 import {
-  Fullscreen,
   Gauge,
   Maximize,
   Minimize,
   Pause,
   Play,
-  RectangleHorizontal,
   RotateCcw,
   SkipBack,
   SkipForward,
@@ -18,6 +16,10 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 import useWindowResize from "../hooks/useWindowResize";
+import {
+  getCurrentVideoStatus,
+  saveVideoStatus,
+} from "../lib/localStorageHelper";
 
 const speedOptions = {
   0.5: "0.5",
@@ -49,6 +51,7 @@ const VideoPlayer = () => {
   const timerRef = useRef(null);
   const seekBarRef = useRef(null);
   const seekBarContainerRef = useRef(null);
+  const playButtonRef = useRef(null);
 
   let timeout;
 
@@ -65,7 +68,16 @@ const VideoPlayer = () => {
 
   useEffect(() => {
     const videoPlayer = videoRef.current;
+
     if (!videoPlayer) return;
+
+    const videoLocalData = getCurrentVideoStatus(activeVideo.id);
+    if (videoLocalData) {
+      videoPlayer.currentTime = videoLocalData.completedDuration;
+      const percentCompleted =
+        (videoPlayer.currentTime * 100) / videoPlayer.duration;
+      seekBarRef.current.style.width = `${percentCompleted}%`;
+    }
 
     const handleFullScreenChange = (e) => {
       if (!document.fullscreenElement) {
@@ -170,6 +182,14 @@ const VideoPlayer = () => {
   }, []);
 
   useEffect(() => {
+    const videoPlayer = videoRef.current;
+    const videoLocalData = getCurrentVideoStatus(activeVideo.id);
+    if (videoLocalData) {
+      videoPlayer.currentTime = videoLocalData.completedDuration;
+      const percentCompleted =
+        (videoPlayer.currentTime * 100) / videoPlayer.duration;
+      seekBarRef.current.style.width = `${percentCompleted}%`;
+    }
     if (isVideoCompleted) {
       setIsVideoCompleted(false);
     }
@@ -186,6 +206,7 @@ const VideoPlayer = () => {
 
     if (!videoRef.current.paused) {
       videoRef.current.pause();
+      saveVideoStatus(videoRef.current.currentTime, activeVideo);
       setIsPlaying(false);
       return;
     }
@@ -240,11 +261,13 @@ const VideoPlayer = () => {
 
   const nextVideoHelper = (e) => {
     e.stopPropagation();
-    nextVideo();
+    saveVideoStatus(videoRef.current.currentTime, activeVideo);
+    // nextVideo();
   };
   const previousVideoHelper = (e) => {
     e.stopPropagation();
-    previousVideo();
+    saveVideoStatus(videoRef.current.currentTime, activeVideo);
+    // previousVideo();
   };
 
   const replayVideo = () => {
@@ -256,6 +279,7 @@ const VideoPlayer = () => {
     e.stopPropagation();
     if (!isSeeking) return;
     videoRef.current.pause();
+    setIsPlaying(false);
 
     const distanceToFill =
       e.clientX - seekBarContainerRef.current.getBoundingClientRect().x;
@@ -274,6 +298,7 @@ const VideoPlayer = () => {
       (percentCovered / 100) * videoRef.current.duration;
     videoRef.current.currentTime = percentageToVideoTime;
     videoRef.current.play();
+    setIsPlaying(true);
   };
 
   const toggleAutoplay = (e) => {
@@ -316,7 +341,7 @@ const VideoPlayer = () => {
       />
       <div
         className={clsx(
-          "flex flex-col absolute bottom-0 w-full text-white px-2 transition-all ease-in-out duration-150 z-10 h-1/6 justify-end bg-gradient-to-t from-black/70 to-transparent rounded-b-lg pb-3",
+          "flex flex-col absolute bottom-0 w-full text-white px-2 transition-all ease-in-out duration-150 z-10 h-1/6 justify-end bg-gradient-to-t from-black/70 to-transparent rounded-b-lg md:pb-3",
           {
             "opacity-100": hoverFocus && isMouseMoving,
             "opacity-100": !hoverFocus || !isMouseMoving,
@@ -335,7 +360,7 @@ const VideoPlayer = () => {
           onMouseMove={seekBarHelper}
         >
           <div
-            className="w-full h-[5px] hover:h-[10px] transition-all bg-gray-300/70 rounded-full cursor-pointer"
+            className="w-full h-[5px] hover:h-[10px] transition-all duration-0 bg-gray-300/70 rounded-full cursor-pointer"
             onClick={seekComplete}
           >
             <div
@@ -430,6 +455,7 @@ const VideoPlayer = () => {
                 size={isMobileView ? 20 : 30}
                 className="cursor-pointer"
                 onClick={videoPlayPause}
+                ref={playButtonRef}
               />
             )}
 
@@ -440,20 +466,6 @@ const VideoPlayer = () => {
             />
           </div>
           <div className="text-white flex gap-5 w-max md:flex-1 items-center justify-end">
-            {playerMode === "DEFAULT" && !isMobileView && (
-              <RectangleHorizontal
-                size={isMobileView ? 20 : 30}
-                className="cursor-pointer"
-                onClick={(e) => switchMode(e, "THEATER")}
-              />
-            )}
-            {playerMode === "THEATER" && (
-              <Fullscreen
-                size={isMobileView ? 20 : 30}
-                className="cursor-pointer"
-                onClick={(e) => switchMode(e, "DEFAULT")}
-              />
-            )}
             {playerMode === "FULLSCREEN" ? (
               <Minimize
                 size={isMobileView ? 20 : 30}
