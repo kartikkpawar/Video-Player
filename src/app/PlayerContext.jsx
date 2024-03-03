@@ -12,6 +12,7 @@ const PlayerProvider = ({ children }) => {
 
   useEffect(() => {
     setActiveVideo(videosData[activeIndex]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeIndex]);
 
   const selectVideo = (data) => {
