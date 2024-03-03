@@ -30,6 +30,7 @@ const VideoList = () => {
                 key={video.id}
                 index={index}
                 id={video.id}
+                showDND
               />
             ))}
           </div>
