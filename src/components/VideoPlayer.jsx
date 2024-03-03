@@ -89,6 +89,8 @@ const VideoPlayer = () => {
     const handleFullScreenChange = (e) => {
       if (!document.fullscreenElement) {
         setPlayerMode("DEFAULT");
+      } else {
+        setPlayerMode("FULLSCREEN");
       }
     };
 
@@ -110,7 +112,11 @@ const VideoPlayer = () => {
 
       // Fullscreen
       if (e.key === "f") {
-        playerContainerRef.current.requestFullscreen();
+        if (!document.fullscreenElement) {
+          playerContainerRef.current.requestFullscreen();
+        } else {
+          document.exitFullscreen();
+        }
       }
 
       // Audio Controls
@@ -133,12 +139,13 @@ const VideoPlayer = () => {
         videoPlayer.volume -= 0.05;
       }
       if (e.key === "m") {
-        videoPlayer.volume = 0;
-        setIsMuted(true);
-      }
-      if (e.key === "u") {
-        videoPlayer.volume = 1;
-        setIsMuted(false);
+        if (videoPlayer.muted) {
+          videoPlayer.muted = false;
+        } else {
+          videoPlayer.muted = true;
+        }
+
+        setIsMuted((prev) => !prev);
       }
 
       // Playback speed
