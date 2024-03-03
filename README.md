@@ -1,6 +1,6 @@
 # Video player assignment
 
-**Live link:- [Click Here](www.google.com)**
+**Live link:- [Click Here](https://kaleidoscopic-faun-0f2f0f.netlify.app/)**
 
 # Features
 
