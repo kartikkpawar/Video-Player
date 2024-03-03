@@ -11,6 +11,8 @@ import {
   RotateCcw,
   SkipBack,
   SkipForward,
+  ToggleLeft,
+  ToggleRight,
   Volume2,
   VolumeX,
 } from "lucide-react";
@@ -37,6 +39,7 @@ const VideoPlayer = () => {
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoCompleted, setIsVideoCompleted] = useState(false);
   const [isSeeking, setIsSeeking] = useState(false);
+  const [isAutoPlayEnabled, setIsAutoPlayEnabled] = useState(false);
 
   const videoRef = useRef(null);
   const playerContainerRef = useRef(null);
@@ -141,9 +144,14 @@ const VideoPlayer = () => {
       if (percentCompleted === 100) setIsVideoCompleted(true);
     };
 
+    const videoPlaying = () => {
+      setIsPlaying(true);
+    };
+
     document.addEventListener("fullscreenchange", handleFullScreenChange);
     document.addEventListener("keydown", handleKeyPress);
     videoPlayer.addEventListener("timeupdate", videoTimeUpdateHelper);
+    videoPlayer.addEventListener("playing", videoPlaying);
 
     return () => {
       document.removeEventListener("fullscreenchange", handleFullScreenChange);
@@ -155,8 +163,8 @@ const VideoPlayer = () => {
   useEffect(() => {
     if (isVideoCompleted) {
       setIsVideoCompleted(false);
-      setIsPlaying(false);
     }
+    setIsPlaying(false);
     seekBarRef.current.style.width = "0px";
   }, [activeVideo]);
 
@@ -257,6 +265,11 @@ const VideoPlayer = () => {
     videoRef.current.play();
   };
 
+  const toggleAutoplay = (e) => {
+    e.stopPropagation();
+    setIsAutoPlayEnabled(!isAutoPlayEnabled);
+  };
+
   return (
     <div
       className="relative aspect-video"
@@ -271,6 +284,7 @@ const VideoPlayer = () => {
         controlsList=""
         src={activeVideo.sources[0]}
         ref={videoRef}
+        autoPlay={isAutoPlayEnabled}
       />
       <div
         className={clsx(
@@ -332,11 +346,36 @@ const VideoPlayer = () => {
                   </span>
                 ))}
             </div>
-            <Gauge className="cursor-pointer" onClick={manageSpeedControls} />
+            <Gauge
+              size={30}
+              className="cursor-pointer"
+              onClick={manageSpeedControls}
+            />
             {isMuted ? (
-              <VolumeX className="cursor-pointer" onClick={muteUnmuteVideo} />
+              <VolumeX
+                size={30}
+                className="cursor-pointer"
+                onClick={muteUnmuteVideo}
+              />
             ) : (
-              <Volume2 className="cursor-pointer" onClick={muteUnmuteVideo} />
+              <Volume2
+                size={30}
+                className="cursor-pointer"
+                onClick={muteUnmuteVideo}
+              />
+            )}
+            {isAutoPlayEnabled ? (
+              <ToggleRight
+                size={30}
+                className="cursor-pointer"
+                onClick={toggleAutoplay}
+              />
+            ) : (
+              <ToggleLeft
+                size={30}
+                className="cursor-pointer"
+                onClick={toggleAutoplay}
+              />
             )}
           </div>
           <div className="text-white flex gap-5 flex-1 items-center justify-center">
