@@ -192,6 +192,7 @@ const VideoPlayer = () => {
       videoPlayer.removeEventListener("timeupdate", videoTimeUpdateHelper);
       clearTimeout(timeout);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // For change in video
@@ -209,6 +210,7 @@ const VideoPlayer = () => {
     }
     setIsPlaying(false);
     seekBarRef.current.style.width = "0px";
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeVideo]);
 
   const videoPlayPause = (e) => {
@@ -362,7 +364,7 @@ const VideoPlayer = () => {
           "flex flex-col absolute bottom-0 w-full text-white px-2 transition-all ease-in-out duration-150 z-10 h-1/6 justify-end bg-gradient-to-t from-black/70 to-transparent rounded-b-lg md:pb-3",
           {
             "opacity-100": hoverFocus && isMouseMoving,
-            "opacity-100": !hoverFocus || !isMouseMoving,
+            "opacity-0": !hoverFocus || !isMouseMoving,
           }
         )}
       >
