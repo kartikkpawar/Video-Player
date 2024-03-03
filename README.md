@@ -1,7 +1,7 @@
 # Video player
 
 **Live link:- [Click Here](https://kaleidoscopic-faun-0f2f0f.netlify.app/)**
-**Lighthouse Score:- [View Here](./lighthouses_report.html)**
+**Lighthouse Score:- [View Here](https://kaleidoscopic-faun-0f2f0f.netlify.app/lighthouse)**
 
 # Features
 
