@@ -170,8 +170,12 @@ const VideoPlayer = () => {
       setIsPlaying(false);
       return;
     }
-    videoRef.current.play();
-    setIsPlaying(true);
+    videoRef.current
+      .play()
+      .then(() => {
+        setIsPlaying(true);
+      })
+      .catch((err) => console.log("Something went wrong", err));
   };
 
   const switchMode = (e, mode) => {
