@@ -262,12 +262,12 @@ const VideoPlayer = () => {
   const nextVideoHelper = (e) => {
     e.stopPropagation();
     saveVideoStatus(videoRef.current.currentTime, activeVideo);
-    // nextVideo();
+    nextVideo();
   };
   const previousVideoHelper = (e) => {
     e.stopPropagation();
     saveVideoStatus(videoRef.current.currentTime, activeVideo);
-    // previousVideo();
+    previousVideo();
   };
 
   const replayVideo = () => {
