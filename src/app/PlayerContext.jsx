@@ -8,7 +8,7 @@ const PlayerProvider = ({ children }) => {
   const [activeVideo, setActiveVideo] = useState(mediaData[activeIndex]);
   const [videosData, setVideosData] = useState(mediaData);
   const [searchedVideos, setSearchedVideos] = useState([]);
-  const [videoDuration, setVideoDuration] = useState("");
+  const [videoRef, setVideoRef] = useState(null);
 
   useEffect(() => {
     setActiveVideo(videosData[activeIndex]);
@@ -46,8 +46,8 @@ const PlayerProvider = ({ children }) => {
     setSearchedVideos(filteredData);
   };
 
-  const updateVideoDuration = (duration) => {
-    setVideoDuration(duration);
+  const updateVideoRef = (ref) => {
+    setVideoRef(ref);
   };
 
   return (
@@ -61,8 +61,8 @@ const PlayerProvider = ({ children }) => {
         updateSearch,
         searchedVideos,
         setVideosData,
-        updateVideoDuration,
-        videoDuration,
+        updateVideoRef,
+        videoRef,
       }}
     >
       {children}

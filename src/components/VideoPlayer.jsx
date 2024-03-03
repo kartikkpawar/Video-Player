@@ -34,7 +34,7 @@ const speedOptions = {
 };
 
 const VideoPlayer = () => {
-  const { activeVideo, nextVideo, previousVideo, updateVideoDuration } =
+  const { activeVideo, nextVideo, previousVideo, updateVideoRef } =
     usePlayerContext();
   const { isMobileView } = useWindowResize();
 
@@ -71,7 +71,7 @@ const VideoPlayer = () => {
 
   useEffect(() => {
     const videoPlayer = videoRef.current;
-
+    updateVideoRef(videoRef);
     if (!videoPlayer) return;
 
     const videoLocalData = getCurrentVideoStatus(activeVideo.id);
@@ -170,9 +170,6 @@ const VideoPlayer = () => {
 
     const videoTimeUpdateHelper = () => {
       timerRef.current.innerHTML = formatTime(videoPlayer.currentTime);
-      console.log("duration changed");
-      updateVideoDuration(videoPlayer.currentTime);
-
       const percentCompleted =
         (videoPlayer.currentTime * 100) / videoPlayer.duration;
       seekBarRef.current.style.width = `${percentCompleted}%`;

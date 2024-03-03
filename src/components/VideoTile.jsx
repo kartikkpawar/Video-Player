@@ -6,12 +6,13 @@ import { saveVideoStatus } from "../lib/localStorageHelper";
 
 const VideoTile = (props) => {
   const data = props.data;
-  const { selectVideo, activeVideo, videoDuration } = usePlayerContext();
+  const { selectVideo, activeVideo, videoRef } = usePlayerContext();
 
   const selectVideoHelper = () => {
     selectVideo(data);
-    if (!videoDuration) return;
-    saveVideoStatus(videoDuration, activeVideo);
+
+    if (!videoRef?.current || !videoRef?.current?.currentTime) return;
+    saveVideoStatus(videoRef.current.currentTime, activeVideo);
   };
 
   if (!props.isDND) {
