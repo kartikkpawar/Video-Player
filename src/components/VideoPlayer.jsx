@@ -17,6 +17,7 @@ import {
   VolumeX,
 } from "lucide-react";
 import clsx from "clsx";
+import useWindowResize from "../hooks/useWindowResize";
 
 const speedOptions = {
   0.5: "0.5",
@@ -30,6 +31,7 @@ const speedOptions = {
 
 const VideoPlayer = () => {
   const { activeVideo, nextVideo, previousVideo } = usePlayerContext();
+  const { isMobileView } = useWindowResize();
 
   const [hoverFocus, setHoverFocus] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -346,8 +348,8 @@ const VideoPlayer = () => {
             <span>{activeVideo.duration}</span>
           </div>
         </div>
-        <div className="my-2 px-3 flex ">
-          <div className="text-white flex gap-5 flex-1 items-center justify-start relative">
+        <div className="my-2 px-3 flex justify-center gap-5">
+          <div className="text-white flex gap-5 w-max md:flex-1 items-center justify-start relative">
             <div
               className={clsx(
                 "flex flex-col bg-black/70 absolute -top-60 -left-2 p-3 rounded-lg text-lg text-center gap-1 w-32 transition-all select-none",
@@ -373,89 +375,94 @@ const VideoPlayer = () => {
                 ))}
             </div>
             <Gauge
-              size={30}
+              size={isMobileView ? 20 : 30}
               className="cursor-pointer"
               onClick={manageSpeedControls}
             />
-            {isMuted ? (
-              <VolumeX
-                size={30}
-                className="cursor-pointer"
-                onClick={muteUnmuteVideo}
-              />
-            ) : (
-              <Volume2
-                size={30}
-                className="cursor-pointer"
-                onClick={muteUnmuteVideo}
-              />
-            )}
+            {!isMobileView &&
+              (isMuted ? (
+                <VolumeX
+                  size={isMobileView ? 20 : 30}
+                  className="cursor-pointer"
+                  onClick={muteUnmuteVideo}
+                />
+              ) : (
+                <Volume2
+                  size={isMobileView ? 20 : 30}
+                  className="cursor-pointer"
+                  onClick={muteUnmuteVideo}
+                />
+              ))}
             {isAutoPlayEnabled ? (
               <ToggleRight
-                size={30}
+                size={isMobileView ? 20 : 30}
                 className="cursor-pointer"
                 onClick={toggleAutoplay}
               />
             ) : (
               <ToggleLeft
-                size={30}
+                size={isMobileView ? 20 : 30}
                 className="cursor-pointer"
                 onClick={toggleAutoplay}
               />
             )}
           </div>
-          <div className="text-white flex gap-5 flex-1 items-center justify-center">
+          <div className="text-white flex gap-5 w-max md:flex-1 items-center justify-center">
             <SkipBack
-              size={30}
+              size={isMobileView ? 20 : 30}
               className="cursor-pointer"
               onClick={previousVideoHelper}
             />
             {isVideoCompleted ? (
               <RotateCcw
-                size={30}
+                size={isMobileView ? 20 : 30}
                 className="cursor-pointer"
                 onClick={() => replayVideo()}
               />
             ) : isPlaying ? (
               <Pause
-                size={30}
+                size={isMobileView ? 20 : 30}
                 className="cursor-pointer"
                 onClick={videoPlayPause}
               />
             ) : (
               <Play
-                size={30}
+                size={isMobileView ? 20 : 30}
                 className="cursor-pointer"
                 onClick={videoPlayPause}
               />
             )}
 
             <SkipForward
-              size={30}
+              size={isMobileView ? 20 : 30}
               className="cursor-pointer"
               onClick={nextVideoHelper}
             />
           </div>
-          <div className="text-white flex gap-5 flex-1 items-center justify-end">
-            {playerMode === "DEFAULT" && (
+          <div className="text-white flex gap-5 w-max md:flex-1 items-center justify-end">
+            {playerMode === "DEFAULT" && !isMobileView && (
               <RectangleHorizontal
+                size={isMobileView ? 20 : 30}
                 className="cursor-pointer"
                 onClick={(e) => switchMode(e, "THEATER")}
               />
             )}
             {playerMode === "THEATER" && (
               <Fullscreen
+                size={isMobileView ? 20 : 30}
                 className="cursor-pointer"
                 onClick={(e) => switchMode(e, "DEFAULT")}
               />
             )}
             {playerMode === "FULLSCREEN" ? (
               <Minimize
+                size={isMobileView ? 20 : 30}
                 className="cursor-pointer"
                 onClick={(e) => switchMode(e, "DEFAULT")}
               />
             ) : (
               <Maximize
+                size={isMobileView ? 20 : 30}
                 className="cursor-pointer"
                 onClick={(e) => switchMode(e, "FULLSCREEN")}
               />

@@ -35,7 +35,7 @@ const App = () => {
         <div className="px-10 box-border flex justify-center items-center">
           <div
             className={clsx(
-              "p-2 px-5 border-2 flex gap-1 rounded-full justify-center items-center w-1/5",
+              "p-2 px-5 border-2 flex gap-1 rounded-full justify-center items-center w-full md:w-1/5",
               {
                 "border-red-500":
                   searchInput.length && searchedVideos.length === 0,
@@ -51,8 +51,8 @@ const App = () => {
             <Search size={20} />
           </div>
         </div>
-        <div className="flex h-full w-full gap-4 p-10 box-border">
-          <div className="flex-[0.7] flex flex-col gap-2 rounded-lg">
+        <div className="flex flex-col md:flex-row h-full w-full gap-4 md:p-10 p-5 box-border">
+          <div className="flex-1 md:flex-[0.7] flex flex-col gap-2 rounded-lg">
             <VideoPlayer />
             <div className="flex flex-col gap-1 p-2">
               <span className="text-2xl line-clamp-2 font-bold select-none hover:select-auto">
@@ -63,7 +63,7 @@ const App = () => {
               </span>
             </div>
           </div>
-          <div className="flex-[0.3]">
+          <div className="flex-1 md:flex-[0.3]">
             <VideoList />
           </div>
         </div>

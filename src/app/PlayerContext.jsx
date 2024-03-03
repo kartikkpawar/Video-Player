@@ -33,6 +33,10 @@ const PlayerProvider = ({ children }) => {
     }
   };
   const updateSearch = (searchParams) => {
+    if (!searchParams) {
+      setSearchedVideos([]);
+      return;
+    }
     const filteredData = videosData.filter(
       (video) =>
         video.title.toLowerCase().includes(searchParams.toLowerCase()) ||

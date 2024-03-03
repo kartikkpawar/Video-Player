@@ -17,7 +17,7 @@ const VideoList = () => {
 
   if (searchedVideos.length > 0) {
     return (
-      <div className="h-full w-full p-4 flex gap-4 flex-col overflow-y-scroll">
+      <div className="h-full w-full p-4 px-0 md:px-4 flex gap-4 flex-col overflow-y-scroll">
         {searchedVideos.map((video, index) => (
           <VideoTile data={video} key={video.id} index={index} id={video.id} />
         ))}
@@ -30,7 +30,7 @@ const VideoList = () => {
       <Droppable droppableId="playlist">
         {(provided) => (
           <div
-            className="h-full w-full p-4 flex gap-4 flex-col overflow-y-scroll"
+            className="h-full w-full p-4 px-0 md:px-4 flex gap-4 flex-col overflow-y-scroll"
             ref={provided.innerRef}
             {...provided.droppableProps}
           >
