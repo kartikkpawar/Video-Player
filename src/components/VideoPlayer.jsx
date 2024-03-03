@@ -48,6 +48,8 @@ const VideoPlayer = () => {
   const seekBarRef = useRef(null);
   const seekBarContainerRef = useRef(null);
 
+  let timeout;
+
   const roundOffTime = new Intl.NumberFormat(undefined, {
     minimumIntegerDigits: 2,
   });
@@ -161,6 +163,7 @@ const VideoPlayer = () => {
       document.removeEventListener("fullscreenchange", handleFullScreenChange);
       document.removeEventListener("keydown", handleKeyPress);
       videoPlayer.removeEventListener("timeupdate", videoTimeUpdateHelper);
+      clearTimeout(timeout);
     };
   }, []);
 
@@ -173,26 +176,7 @@ const VideoPlayer = () => {
   }, [activeVideo]);
 
   // Mouse handling
-  useEffect(() => {
-    const videoPlayer = videoRef.current;
-    if (!videoPlayer) return;
-    let timeout;
-    const hideMouse = () => {
-      setIsMouseMoving(false);
-    };
 
-    const handleMouseMove = () => {
-      setIsMouseMoving(true);
-      clearTimeout(timeout);
-      timeout = setTimeout(hideMouse, 3000);
-    };
-
-    videoPlayer.addEventListener("mousemove", handleMouseMove);
-    return () => {
-      videoPlayer.removeEventListener("mousemove", handleMouseMove);
-      clearTimeout(timeout);
-    };
-  }, []);
   const videoPlayPause = (e) => {
     if (e) {
       e.stopPropagation();
@@ -295,6 +279,20 @@ const VideoPlayer = () => {
     setIsAutoPlayEnabled(!isAutoPlayEnabled);
   };
 
+  const mouseMoveHandler = () => {
+    if (!isPlaying) return setIsMouseMoving(true);
+
+    const videoPlayer = videoRef.current;
+    if (!videoPlayer) return;
+    const hideMouse = () => {
+      setIsMouseMoving(false);
+    };
+
+    setIsMouseMoving(true);
+    clearTimeout(timeout);
+    timeout = setTimeout(hideMouse, 3000);
+  };
+
   return (
     <div
       className={clsx("relative aspect-video", {
@@ -304,6 +302,7 @@ const VideoPlayer = () => {
       onMouseLeave={mouseLeaveHelper}
       onClick={playerClickHelper}
       ref={playerContainerRef}
+      onMouseMove={mouseMoveHandler}
     >
       <video
         className="w-full h-full rounded-lg"
