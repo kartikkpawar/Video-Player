@@ -1,4 +1,4 @@
-# Video player assignment
+# Video player
 
 **Live link:- [Click Here](www.google.com)**
 
